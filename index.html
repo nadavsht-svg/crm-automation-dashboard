@@ -36,7 +36,7 @@
     <div class="header">
         <h1>CRM Automation Adoption</h1>
     </div>
-    <div class="freshness">Generated: 2026-02-20 17:13</div>
+    <div class="freshness">Generated: 2026-02-20 17:15</div>
     
     <div class="tabs">
         <div class="tab active" onclick="switchTab('adoption')">Adoption</div>
@@ -126,12 +126,12 @@
         <div class="kpi-row" style="grid-template-columns: repeat(3, 1fr);">
             <div class="kpi-card">
                 <div class="kpi-label">Clicks on "CRM Recommended"</div>
-                <div class="kpi-value">283</div>
+                <div class="kpi-value">284</div>
                 <div class="kpi-sub">since Feb 19</div>
             </div>
             <div class="kpi-card">
                 <div class="kpi-label">Accounts That Clicked</div>
-                <div class="kpi-value">217</div>
+                <div class="kpi-value">218</div>
                 <div class="kpi-sub">unique accounts</div>
             </div>
             <div class="kpi-card">
@@ -149,14 +149,14 @@
         <div id="events-daily">
             <div class="row full">
                 <div class="card">
-                    <div class="card-title">Daily Clicks</div>
-                    <div id="chart-events-clicks-daily"></div>
+                    <div class="card-title">Daily Unique Accounts</div>
+                    <div id="chart-events-accounts-daily"></div>
                 </div>
             </div>
             <div class="row full">
                 <div class="card">
-                    <div class="card-title">Daily Unique Accounts</div>
-                    <div id="chart-events-accounts-daily"></div>
+                    <div class="card-title">Daily Clicks</div>
+                    <div id="chart-events-clicks-daily"></div>
                 </div>
             </div>
         </div>
@@ -164,14 +164,14 @@
         <div id="events-weekly" style="display: none;">
             <div class="row full">
                 <div class="card">
-                    <div class="card-title">Weekly Clicks</div>
-                    <div id="chart-events-clicks-weekly"></div>
+                    <div class="card-title">Weekly Unique Accounts</div>
+                    <div id="chart-events-accounts-weekly"></div>
                 </div>
             </div>
             <div class="row full">
                 <div class="card">
-                    <div class="card-title">Weekly Unique Accounts</div>
-                    <div id="chart-events-accounts-weekly"></div>
+                    <div class="card-title">Weekly Clicks</div>
+                    <div id="chart-events-clicks-weekly"></div>
                 </div>
             </div>
         </div>
@@ -343,49 +343,61 @@
         Plotly.newPlot('chart-events-clicks-daily', [{
             type: 'bar',
             x: ["2026-02-19", "2026-02-20"],
-            y: [193, 90],
+            y: [193, 91],
+            text: [193, 91],
+            textposition: 'outside',
+            textfont: { size: 10 },
             marker: { color: '#6161FF' }
         }], {
-            margin: { l: 60, r: 30, t: 20, b: 70 },
+            margin: { l: 60, r: 30, t: 30, b: 70 },
             xaxis: { showgrid: false, tickangle: -45 },
             yaxis: { title: 'Clicks', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
-            height: 300
+            height: 320
         });
         
         Plotly.newPlot('chart-events-accounts-daily', [{
             type: 'bar',
             x: ["2026-02-19", "2026-02-20"],
-            y: [146, 75],
+            y: [146, 76],
+            text: [146, 76],
+            textposition: 'outside',
+            textfont: { size: 10 },
             marker: { color: '#181B34' }
         }], {
-            margin: { l: 60, r: 30, t: 20, b: 70 },
+            margin: { l: 60, r: 30, t: 30, b: 70 },
             xaxis: { showgrid: false, tickangle: -45 },
             yaxis: { title: 'Unique Accounts', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
-            height: 300
+            height: 320
         });
         
         Plotly.newPlot('chart-events-clicks-weekly', [{
             type: 'bar',
             x: ["2026-02-16"],
-            y: [283],
+            y: [284],
+            text: [284],
+            textposition: 'outside',
+            textfont: { size: 10 },
             marker: { color: '#6161FF' }
         }], {
-            margin: { l: 60, r: 30, t: 20, b: 50 },
+            margin: { l: 60, r: 30, t: 30, b: 50 },
             xaxis: { showgrid: false },
             yaxis: { title: 'Clicks', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
-            height: 300
+            height: 320
         });
         
         Plotly.newPlot('chart-events-accounts-weekly', [{
             type: 'bar',
             x: ["2026-02-16"],
-            y: [217],
+            y: [218],
+            text: [218],
+            textposition: 'outside',
+            textfont: { size: 10 },
             marker: { color: '#181B34' }
         }], {
-            margin: { l: 60, r: 30, t: 20, b: 50 },
+            margin: { l: 60, r: 30, t: 30, b: 50 },
             xaxis: { showgrid: false },
             yaxis: { title: 'Unique Accounts', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
-            height: 300
+            height: 320
         });
     </script>
 </body>
