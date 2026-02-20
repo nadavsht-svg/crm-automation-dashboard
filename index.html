@@ -36,7 +36,7 @@
     <div class="header">
         <h1>CRM Automation Adoption</h1>
     </div>
-    <div class="freshness">Generated: 2026-02-20 17:01</div>
+    <div class="freshness">Generated: 2026-02-20 17:03</div>
     
     <div class="tabs">
         <div class="tab active" onclick="switchTab('adoption')">Adoption</div>
@@ -294,71 +294,45 @@
         var trendDataTop5 = {"Status changes to something -> Move to group": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [30.89, 31.63, 32.61, 33.33, 34.1, 34.96, 35.55, 36.06, 36.63, 37.12, 37.79, 38.06]}, "Status changes to something -> Notify": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [28.21, 29.25, 30.34, 31.2, 31.97, 32.67, 33.07, 33.74, 34.13, 34.34, 34.59, 34.46]}, "Status changes to something -> Set date": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [13.38, 13.41, 13.7, 13.98, 14.29, 14.53, 14.76, 15.0, 15.25, 15.5, 15.76, 15.78]}, "item created -> Set date": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [14.91, 15.43, 15.68, 15.82, 16.15, 16.43, 16.72, 16.94, 17.35, 17.64, 17.95, 18.01]}, "item created -> Set status": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [50.75, 52.25, 53.92, 55.27, 56.43, 57.53, 58.37, 59.36, 59.93, 60.34, 61.0, 61.11]}};
         var colors = ['#6161FF', '#00CA72', '#FDAB3D', '#E2445C', '#0086C0', '#9D65C9', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'];
         var trendTracesTop5 = [];
-        var annotationsTop5 = [];
         var i = 0;
         for (var autoType in trendDataTop5) {
-            var lastIdx = trendDataTop5[autoType].rates.length - 1;
             trendTracesTop5.push({
                 type: 'scatter', mode: 'lines+markers',
                 name: autoType,
                 x: trendDataTop5[autoType].months,
                 y: trendDataTop5[autoType].rates,
                 line: { color: colors[i % colors.length], width: 2 },
-                marker: { size: 6 },
-                showlegend: false
-            });
-            // Add label at end of line
-            annotationsTop5.push({
-                x: trendDataTop5[autoType].months[lastIdx],
-                y: trendDataTop5[autoType].rates[lastIdx],
-                xanchor: 'left',
-                yanchor: 'middle',
-                text: '  ' + autoType.replace(' -> ', ' > '),
-                font: { size: 11, color: colors[i % colors.length] },
-                showarrow: false
+                marker: { size: 6 }
             });
             i++;
         }
         Plotly.newPlot('chart-trend-top5', trendTracesTop5, {
-            margin: { l: 60, r: 280, t: 20, b: 50 },
+            margin: { l: 60, r: 30, t: 20, b: 50 },
             xaxis: { showgrid: false },
             yaxis: { title: 'Adoption Rate (%)', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
-            annotations: annotationsTop5,
+            legend: { x: 1.02, y: 1, xanchor: 'left', font: { size: 10 } },
             height: 450
         });
         
         var trendDataAll = {"Status changes to something -> Create subitem": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [0.98, 1.04, 1.09, 1.12, 1.16, 1.21, 1.23, 1.25, 1.28, 1.31, 1.36, 1.35]}, "Status changes to something -> Move to board": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [7.54, 7.81, 8.14, 8.36, 8.56, 8.84, 9.0, 9.09, 9.27, 9.42, 9.57, 9.61]}, "Status changes to something -> Move to group": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [30.89, 31.63, 32.61, 33.33, 34.1, 34.96, 35.55, 36.06, 36.63, 37.12, 37.79, 38.06]}, "Status changes to something -> Notify": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [28.21, 29.25, 30.34, 31.2, 31.97, 32.67, 33.07, 33.74, 34.13, 34.34, 34.59, 34.46]}, "Status changes to something -> Set date": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [13.38, 13.41, 13.7, 13.98, 14.29, 14.53, 14.76, 15.0, 15.25, 15.5, 15.76, 15.78]}, "Status changes to something -> Set status": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [6.82, 7.03, 7.24, 7.4, 7.58, 7.78, 7.93, 8.1, 8.24, 8.41, 8.57, 8.61]}, "item created -> Create subitem": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [0.75, 0.78, 0.82, 0.85, 0.87, 0.92, 0.93, 0.95, 0.97, 0.98, 1.01, 1.03]}, "item created -> Notify": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [3.68, 3.83, 4.07, 4.19, 4.37, 4.5, 4.66, 4.77, 4.93, 5.05, 5.21, 5.28]}, "item created -> Set date": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [14.91, 15.43, 15.68, 15.82, 16.15, 16.43, 16.72, 16.94, 17.35, 17.64, 17.95, 18.01]}, "item created -> Set status": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [50.75, 52.25, 53.92, 55.27, 56.43, 57.53, 58.37, 59.36, 59.93, 60.34, 61.0, 61.11]}};
         var trendTracesAll = [];
-        var annotationsAll = [];
         i = 0;
         for (var autoType in trendDataAll) {
-            var lastIdx = trendDataAll[autoType].rates.length - 1;
             trendTracesAll.push({
                 type: 'scatter', mode: 'lines+markers',
                 name: autoType,
                 x: trendDataAll[autoType].months,
                 y: trendDataAll[autoType].rates,
                 line: { color: colors[i % colors.length], width: 2 },
-                marker: { size: 5 },
-                showlegend: false
-            });
-            // Add label at end of line
-            annotationsAll.push({
-                x: trendDataAll[autoType].months[lastIdx],
-                y: trendDataAll[autoType].rates[lastIdx],
-                xanchor: 'left',
-                yanchor: 'middle',
-                text: '  ' + autoType.replace(' -> ', ' > '),
-                font: { size: 10, color: colors[i % colors.length] },
-                showarrow: false
+                marker: { size: 5 }
             });
             i++;
         }
         Plotly.newPlot('chart-trend-all', trendTracesAll, {
-            margin: { l: 60, r: 280, t: 20, b: 50 },
+            margin: { l: 60, r: 30, t: 20, b: 50 },
             xaxis: { showgrid: false },
             yaxis: { title: 'Adoption Rate (%)', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
-            annotations: annotationsAll,
+            legend: { x: 1.02, y: 1, xanchor: 'left', font: { size: 9 } },
             height: 450
         });
         
