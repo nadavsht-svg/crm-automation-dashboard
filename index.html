@@ -36,7 +36,7 @@
     <div class="header">
         <h1>CRM Automation Adoption</h1>
     </div>
-    <div class="freshness">Generated: 2026-02-20 17:15</div>
+    <div class="freshness">Generated: 2026-02-20 17:17</div>
     
     <div class="tabs">
         <div class="tab active" onclick="switchTab('adoption')">Adoption</div>
@@ -199,6 +199,10 @@
             document.getElementById('btn-monthly-' + view).classList.add('active');
             document.getElementById('chart-monthly-total').style.display = view === 'total' ? 'block' : 'none';
             document.getElementById('chart-monthly-stacked').style.display = view === 'stacked' ? 'block' : 'none';
+            // Trigger resize for proper rendering
+            setTimeout(function() {
+                Plotly.Plots.resize(document.getElementById('chart-monthly-' + view));
+            }, 10);
         }
         
         function switchTrendView(view) {
@@ -266,10 +270,10 @@
             y: [3433, 12383, 10827, 11332, 10737, 12239, 10749, 11056, 11747, 9864, 8923, 10846, 5698],
             marker: { color: '#6161FF' }
         }], {
-            margin: { l: 60, r: 30, t: 20, b: 50 },
+            margin: { l: 60, r: 20, t: 20, b: 50 },
             xaxis: { showgrid: false },
             yaxis: { title: 'Automations Created', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
-            height: 300
+            height: 350
         });
         
         var stackedData = {"Status changes to something -> Move to group": [1577, 5296, 4864, 5030, 4780, 5455, 4838, 4884, 5289, 4378, 3899, 4923, 2580], "item created -> Set status": [520, 2068, 1954, 2192, 2165, 2368, 1958, 2173, 2238, 2011, 1789, 2183, 1090], "Status changes to something -> Set date": [298, 994, 795, 914, 897, 1094, 939, 943, 913, 814, 809, 751, 460], "Status changes to something -> Set status": [293, 1241, 902, 795, 781, 954, 810, 812, 956, 719, 718, 805, 421], "Status changes to something -> Notify": [212, 702, 760, 917, 773, 765, 730, 764, 758, 663, 595, 711, 337], "item created -> Set date": [299, 1151, 837, 667, 616, 727, 643, 712, 641, 571, 536, 713, 339]};
@@ -287,12 +291,12 @@
             colorIdx++;
         }
         Plotly.newPlot('chart-monthly-stacked', stackedTraces, {
-            margin: { l: 60, r: 30, t: 20, b: 100 },
+            margin: { l: 60, r: 20, t: 20, b: 100 },
             xaxis: { showgrid: false },
             yaxis: { title: 'Automations Created', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
             barmode: 'stack',
-            legend: { orientation: 'h', y: -0.3, font: { size: 9 } },
-            height: 400
+            legend: { orientation: 'h', y: -0.25, x: 0.5, xanchor: 'center', font: { size: 10 } },
+            height: 350
         });
         
         var trendDataTop5 = {"Status changes to something -> Move to group": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [30.89, 31.63, 32.61, 33.33, 34.1, 34.96, 35.55, 36.06, 36.63, 37.12, 37.79, 38.06]}, "Status changes to something -> Notify": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [28.21, 29.25, 30.34, 31.2, 31.97, 32.67, 33.07, 33.74, 34.13, 34.34, 34.59, 34.46]}, "Status changes to something -> Set date": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [13.38, 13.41, 13.7, 13.98, 14.29, 14.53, 14.76, 15.0, 15.25, 15.5, 15.76, 15.78]}, "item created -> Set date": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [14.91, 15.43, 15.68, 15.82, 16.15, 16.43, 16.72, 16.94, 17.35, 17.64, 17.95, 18.01]}, "item created -> Set status": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [50.75, 52.25, 53.92, 55.27, 56.43, 57.53, 58.37, 59.36, 59.93, 60.34, 61.0, 61.11]}};
