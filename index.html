@@ -36,7 +36,7 @@
     <div class="header">
         <h1>CRM Automation Adoption</h1>
     </div>
-    <div class="freshness">Generated: 2026-02-20 17:08</div>
+    <div class="freshness">Generated: 2026-02-20 17:10</div>
     
     <div class="tabs">
         <div class="tab active" onclick="switchTab('adoption')">Adoption</div>
@@ -207,6 +207,10 @@
             document.getElementById('btn-trend-' + view).classList.add('active');
             document.getElementById('chart-trend-top5').style.display = view === 'top5' ? 'block' : 'none';
             document.getElementById('chart-trend-all').style.display = view === 'all' ? 'block' : 'none';
+            // Trigger resize for proper rendering
+            setTimeout(function() {
+                Plotly.Plots.resize(document.getElementById('chart-trend-' + view));
+            }, 10);
         }
         
         Plotly.newPlot('chart-cumulative', [{
@@ -329,11 +333,11 @@
             i++;
         }
         Plotly.newPlot('chart-trend-all', trendTracesAll, {
-            margin: { l: 60, r: 250, t: 20, b: 50 },
+            margin: { l: 60, r: 20, t: 20, b: 150 },
             xaxis: { showgrid: false },
             yaxis: { title: 'Adoption Rate (%)', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
-            legend: { x: 1.02, y: 1, xanchor: 'left', font: { size: 10 } },
-            height: 500
+            legend: { orientation: 'h', y: -0.25, x: 0.5, xanchor: 'center', font: { size: 9 } },
+            height: 550
         });
         
         Plotly.newPlot('chart-events-clicks-daily', [{
