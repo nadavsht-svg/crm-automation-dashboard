@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CRM Automation Adoption Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        * { font-family: 'Figtree', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #F2F5FF; padding: 24px; }
+        .header { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+        .header h1 { font-size: 28px; font-weight: 700; color: #181B34; }
+        .freshness { font-size: 12px; color: #787878; margin-bottom: 20px; }
+        .tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+        .tab { padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; background: white; border: 2px solid transparent; color: #787878; }
+        .tab:hover { border-color: #c3c6d4; }
+        .tab.active { background: #6161FF; color: white; border-color: #6161FF; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .kpi-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .kpi-label { font-size: 11px; font-weight: 600; color: #787878; margin-bottom: 8px; text-transform: uppercase; }
+        .kpi-value { font-size: 32px; font-weight: 700; color: #6161FF; }
+        .kpi-sub { font-size: 12px; color: #787878; margin-top: 4px; }
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        .row.full { grid-template-columns: 1fr; }
+        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .card-title { font-size: 14px; font-weight: 600; color: #181B34; margin-bottom: 4px; }
+        .card-caption { font-size: 12px; color: #787878; margin-bottom: 16px; }
+        .explanation { background: white; border-left: 4px solid #6161FF; padding: 16px 20px; border-radius: 0 8px 8px 0; margin-bottom: 24px; font-size: 14px; line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚡ CRM Automation Adoption</h1>
+    </div>
+    <div class="freshness">Generated: 2026-02-20 15:16</div>
+    
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('adoption')">📊 Adoption</div>
+        <div class="tab" onclick="switchTab('events')">🖱️ Events</div>
+    </div>
+    
+    <div id="tab-adoption" class="tab-content active">
+        <div class="explanation">
+            <strong>What's included:</strong> Only the 11 CRM recommended automation templates from the Automation Center.<br>
+            <em>Status changes → Move to group/board, Set status, Set date, Notify, Create subitem</em><br>
+            <em>Item created → Set status, Set date, Notify, Create subitem</em> | <em>Date arrives → Notify</em><br><br>
+            <span style="color: #787878;"><strong>Excludes:</strong> Legacy automations, boards without entity, ticket boards.</span>
+        </div>
+        
+        <div class="kpi-row">
+            <div class="kpi-card">
+                <div class="kpi-label">Account Adoption Rate</div>
+                <div class="kpi-value">74.9%</div>
+                <div class="kpi-sub">27.8K of 37.0K accounts</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Board Adoption Rate</div>
+                <div class="kpi-value">11.5%</div>
+                <div class="kpi-sub">97.9K of 847.8K boards</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Total Automations</div>
+                <div class="kpi-value">189.2K</div>
+                <div class="kpi-sub">active automations</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Avg per Account</div>
+                <div class="kpi-value">6.8</div>
+                <div class="kpi-sub">among adopters</div>
+            </div>
+        </div>
+        
+        <div class="row full">
+            <div class="card">
+                <div class="card-title">Cumulative Adoption Over Time</div>
+                <div class="card-caption">% of paying accounts with at least one automation (up to that month)</div>
+                <div id="chart-cumulative"></div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="card">
+                <div class="card-title">Current Adoption by Automation Type</div>
+                <div class="card-caption">% of paying accounts with active automation of each type</div>
+                <div id="chart-type"></div>
+            </div>
+            <div class="card">
+                <div class="card-title">Adoption by Entity Type</div>
+                <div class="card-caption">% of boards (by entity) with at least one automation</div>
+                <div id="chart-entity"></div>
+            </div>
+        </div>
+        
+        <div class="row full">
+            <div class="card">
+                <div class="card-title">Automations Created Per Month</div>
+                <div class="card-caption">Number of automations created by paying accounts (at time of creation)</div>
+                <div id="chart-monthly"></div>
+            </div>
+        </div>
+        
+        <div class="row full">
+            <div class="card">
+                <div class="card-title">Adoption Rate by Automation Type Over Time</div>
+                <div class="card-caption">Cumulative % of paying accounts (per month) that have used each automation type</div>
+                <div id="chart-trend"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="tab-events" class="tab-content">
+        <div class="kpi-row" style="grid-template-columns: repeat(3, 1fr);">
+            <div class="kpi-card">
+                <div class="kpi-label">Clicks on "CRM Recommended" Category</div>
+                <div class="kpi-value">264</div>
+                <div class="kpi-sub">in Automation Center since Feb 19</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Accounts That Clicked</div>
+                <div class="kpi-value">200</div>
+                <div class="kpi-sub">unique accounts exploring CRM automations</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Clicks per Account</div>
+                <div class="kpi-value">1.3</div>
+                <div class="kpi-sub">average engagement</div>
+            </div>
+        </div>
+        
+        <div class="row full">
+            <div class="card">
+                <div class="card-title">Weekly Clicks on "CRM Recommended" Category</div>
+                <div id="chart-events-clicks"></div>
+            </div>
+        </div>
+        
+        <div class="row full">
+            <div class="card">
+                <div class="card-title">Weekly Unique Accounts Clicking</div>
+                <div id="chart-events-accounts"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function switchTab(name) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelector('.tab[onclick*="' + name + '"]').classList.add('active');
+            document.getElementById('tab-' + name).classList.add('active');
+        }
+        
+        Plotly.newPlot('chart-cumulative', [{
+            type: 'scatter', mode: 'lines+markers',
+            x: ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"],
+            y: [58.38, 59.67, 61.21, 62.5, 63.59, 64.65, 65.47, 66.4, 66.96, 67.41, 68.01, 68.12],
+            line: { color: '#6161FF', width: 3 },
+            marker: { size: 8 },
+            fill: 'tozeroy',
+            fillcolor: 'rgba(97, 97, 255, 0.1)'
+        }], {
+            margin: { l: 60, r: 30, t: 20, b: 50 },
+            xaxis: { showgrid: false },
+            yaxis: { title: 'Adoption Rate (%)', ticksuffix: '%', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
+            height: 300
+        });
+        
+        Plotly.newPlot('chart-type', [{
+            type: 'bar', orientation: 'h',
+            y: ["item created \u2192 Move to group", "item created \u2192 Notify", "Status changes to something \u2192 Move to board", "Status changes to something \u2192 Set status", "Status changes to something \u2192 Set date", "item created \u2192 Set date", "Scheduled Trigger \u2192 Notify", "Status changes to something \u2192 Move to group", "Status changes to something \u2192 Notify", "item created \u2192 Set status"],
+            x: [1.1, 1.76, 3.07, 4.17, 11.21, 14.28, 16.21, 19.4, 34.33, 66.26],
+            marker: { color: '#181B34' },
+            text: ["1.1%", "1.8%", "3.1%", "4.2%", "11.2%", "14.3%", "16.2%", "19.4%", "34.3%", "66.3%"],
+            textposition: 'outside'
+        }], {
+            margin: { l: 200, r: 60, t: 10, b: 30 },
+            xaxis: { ticksuffix: '%', showgrid: false },
+            height: 350
+        });
+        
+        Plotly.newPlot('chart-entity', [{
+            type: 'bar', orientation: 'h',
+            y: ["ProjectRequestAndApproval", "Deals", "Project", "Projects", "lead", "Leads", "deal", "standaloneProject", "Activity", "portfolio"],
+            x: [18.79, 19.54, 21.01, 23.48, 28.01, 29.11, 29.83, 33.1, 36.94, 41.76],
+            marker: { color: '#181B34' },
+            text: ["18.8%", "19.5%", "21.0%", "23.5%", "28.0%", "29.1%", "29.8%", "33.1%", "36.9%", "41.8%"],
+            textposition: 'outside'
+        }], {
+            margin: { l: 120, r: 60, t: 10, b: 30 },
+            xaxis: { ticksuffix: '%', showgrid: false },
+            height: 350
+        });
+        
+        Plotly.newPlot('chart-monthly', [{
+            type: 'bar',
+            x: ["2025-02-01", "2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"],
+            y: [1831, 6835, 6075, 6329, 5890, 7046, 5724, 5586, 6638, 5071, 4417, 5455, 2372],
+            marker: { color: '#6161FF' }
+        }], {
+            margin: { l: 60, r: 30, t: 20, b: 50 },
+            xaxis: { showgrid: false },
+            yaxis: { title: 'Automations Created', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
+            height: 300
+        });
+        
+        // Trend chart with multiple lines
+        var trendData = {"Scheduled Trigger \u2192 Notify": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [13.78, 13.58, 13.52, 13.5, 13.73, 13.79, 13.84, 13.89, 14.01, 14.11, 14.23, 14.05]}, "Status changes to something \u2192 Move to group": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [11.6, 12.0, 12.46, 12.87, 13.38, 13.83, 14.22, 14.53, 14.89, 15.16, 15.56, 15.7]}, "Status changes to something \u2192 Notify": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [25.13, 26.13, 27.14, 27.94, 28.64, 29.39, 29.82, 30.45, 30.82, 31.06, 31.37, 31.3]}, "item created \u2192 Set date": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [9.48, 9.7, 9.79, 9.81, 9.9, 9.95, 10.0, 10.03, 10.11, 10.12, 10.24, 10.19]}, "item created \u2192 Set status": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [48.71, 50.26, 52.03, 53.47, 54.71, 55.81, 56.74, 57.77, 58.38, 58.9, 59.58, 59.72]}};
+        var colors = ['#6161FF', '#00CA72', '#FDAB3D', '#E2445C', '#0086C0'];
+        var trendTraces = [];
+        var i = 0;
+        for (var autoType in trendData) {
+            trendTraces.push({
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: autoType,
+                x: trendData[autoType].months,
+                y: trendData[autoType].rates,
+                line: { color: colors[i % colors.length], width: 2 },
+                marker: { size: 6 }
+            });
+            i++;
+        }
+        Plotly.newPlot('chart-trend', trendTraces, {
+            margin: { l: 60, r: 30, t: 20, b: 50 },
+            xaxis: { showgrid: false },
+            yaxis: { title: 'Adoption Rate (%)', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
+            legend: { orientation: 'h', y: -0.2 },
+            height: 400
+        });
+        
+        Plotly.newPlot('chart-events-clicks', [{
+            type: 'bar',
+            x: ["2026-02-16"],
+            y: [264],
+            marker: { color: '#6161FF' },
+            text: [264],
+            textposition: 'outside'
+        }], {
+            margin: { l: 60, r: 30, t: 40, b: 50 },
+            xaxis: { showgrid: false },
+            yaxis: { title: 'Clicks', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
+            height: 300
+        });
+        
+        Plotly.newPlot('chart-events-accounts', [{
+            type: 'bar',
+            x: ["2026-02-16"],
+            y: [200],
+            marker: { color: '#181B34' },
+            text: [200],
+            textposition: 'outside'
+        }], {
+            margin: { l: 60, r: 30, t: 40, b: 50 },
+            xaxis: { showgrid: false },
+            yaxis: { title: 'Unique Accounts', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
+            height: 300
+        });
+    </script>
+</body>
+</html>
