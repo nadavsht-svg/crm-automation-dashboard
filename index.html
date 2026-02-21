@@ -36,7 +36,7 @@
     <div class="header">
         <h1>CRM Automation Adoption</h1>
     </div>
-    <div class="freshness">Generated: 2026-02-21 19:15</div>
+    <div class="freshness">Generated: 2026-02-21 19:27</div>
     
     <div class="tabs">
         <div class="tab active" onclick="switchTab('adoption')">Adoption</div>
@@ -112,12 +112,20 @@
             <div class="card">
                 <div class="card-title">Adoption Rate by Automation Type Over Time</div>
                 <div class="card-caption">% of paying accounts using each automation type</div>
-                <div style="margin-bottom: 10px;">
-                    <button id="btn-trend-top5" class="view-toggle active" onclick="switchTrendView('top5')">Top 5</button>
-                    <button id="btn-trend-all" class="view-toggle" onclick="switchTrendView('all')">All Types</button>
+                <div style="margin-bottom: 10px; display: flex; gap: 20px; align-items: center;">
+                    <div>
+                        <button id="btn-trend-monthly" class="view-toggle active" onclick="switchTrendPeriod('monthly')">Monthly</button>
+                        <button id="btn-trend-weekly" class="view-toggle" onclick="switchTrendPeriod('weekly')">Weekly</button>
+                    </div>
+                    <div>
+                        <button id="btn-trend-top5" class="view-toggle active" onclick="switchTrendType('top5')">Top 5</button>
+                        <button id="btn-trend-all" class="view-toggle" onclick="switchTrendType('all')">All Types</button>
+                    </div>
                 </div>
-                <div id="chart-trend-top5"></div>
-                <div id="chart-trend-all" style="display: none;"></div>
+                <div id="chart-trend-monthly-top5"></div>
+                <div id="chart-trend-monthly-all" style="display: none;"></div>
+                <div id="chart-trend-weekly-top5" style="display: none;"></div>
+                <div id="chart-trend-weekly-all" style="display: none;"></div>
             </div>
         </div>
     </div>
@@ -205,16 +213,34 @@
             }, 10);
         }
         
-        function switchTrendView(view) {
+        var trendPeriod = 'monthly';
+        var trendType = 'top5';
+        
+        function updateTrendCharts() {
+            ['monthly-top5', 'monthly-all', 'weekly-top5', 'weekly-all'].forEach(function(id) {
+                document.getElementById('chart-trend-' + id).style.display = 'none';
+            });
+            var activeChart = 'chart-trend-' + trendPeriod + '-' + trendType;
+            document.getElementById(activeChart).style.display = 'block';
+            setTimeout(function() {
+                Plotly.Plots.resize(document.getElementById(activeChart));
+            }, 10);
+        }
+        
+        function switchTrendPeriod(period) {
+            trendPeriod = period;
+            document.getElementById('btn-trend-monthly').classList.remove('active');
+            document.getElementById('btn-trend-weekly').classList.remove('active');
+            document.getElementById('btn-trend-' + period).classList.add('active');
+            updateTrendCharts();
+        }
+        
+        function switchTrendType(type) {
+            trendType = type;
             document.getElementById('btn-trend-top5').classList.remove('active');
             document.getElementById('btn-trend-all').classList.remove('active');
-            document.getElementById('btn-trend-' + view).classList.add('active');
-            document.getElementById('chart-trend-top5').style.display = view === 'top5' ? 'block' : 'none';
-            document.getElementById('chart-trend-all').style.display = view === 'all' ? 'block' : 'none';
-            // Trigger resize for proper rendering
-            setTimeout(function() {
-                Plotly.Plots.resize(document.getElementById('chart-trend-' + view));
-            }, 10);
+            document.getElementById('btn-trend-' + type).classList.add('active');
+            updateTrendCharts();
         }
         
         Plotly.newPlot('chart-cumulative', [{
@@ -299,12 +325,14 @@
             height: 350
         });
         
-        var trendDataTop5 = {"Status changes to something -> Move to group": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [30.88, 31.63, 32.61, 33.33, 34.1, 34.95, 35.55, 36.06, 36.63, 37.11, 37.8, 38.08]}, "Status changes to something -> Notify": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [28.21, 29.26, 30.35, 31.2, 31.98, 32.68, 33.08, 33.75, 34.14, 34.36, 34.62, 34.48]}, "Status changes to something -> Set date": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [13.39, 13.41, 13.7, 13.99, 14.29, 14.53, 14.76, 15.0, 15.25, 15.5, 15.76, 15.81]}, "item created -> Set date": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [14.91, 15.42, 15.68, 15.81, 16.15, 16.43, 16.72, 16.94, 17.35, 17.64, 17.95, 18.03]}, "item created -> Set status": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [50.75, 52.25, 53.93, 55.28, 56.44, 57.54, 58.38, 59.38, 59.96, 60.36, 61.03, 61.17]}};
         var colors = ['#6161FF', '#00CA72', '#FDAB3D', '#E2445C', '#0086C0', '#9D65C9', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'];
-        var trendTracesTop5 = [];
+        
+        // Monthly Top 5
+        var trendDataTop5 = {"Status changes to something -> Move to group": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [30.88, 31.63, 32.61, 33.33, 34.1, 34.95, 35.55, 36.06, 36.63, 37.11, 37.8, 38.08]}, "Status changes to something -> Notify": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [28.21, 29.26, 30.35, 31.2, 31.98, 32.68, 33.08, 33.75, 34.14, 34.36, 34.62, 34.48]}, "Status changes to something -> Set date": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [13.39, 13.41, 13.7, 13.99, 14.29, 14.53, 14.76, 15.0, 15.25, 15.5, 15.76, 15.81]}, "item created -> Set date": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [14.91, 15.42, 15.68, 15.81, 16.15, 16.43, 16.72, 16.94, 17.35, 17.64, 17.95, 18.03]}, "item created -> Set status": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [50.75, 52.25, 53.93, 55.28, 56.44, 57.54, 58.38, 59.38, 59.96, 60.36, 61.03, 61.17]}};
+        var trendTracesMonthlyTop5 = [];
         var i = 0;
         for (var autoType in trendDataTop5) {
-            trendTracesTop5.push({
+            trendTracesMonthlyTop5.push({
                 type: 'scatter', mode: 'lines+markers',
                 name: autoType,
                 x: trendDataTop5[autoType].months,
@@ -314,7 +342,7 @@
             });
             i++;
         }
-        Plotly.newPlot('chart-trend-top5', trendTracesTop5, {
+        Plotly.newPlot('chart-trend-monthly-top5', trendTracesMonthlyTop5, {
             margin: { l: 60, r: 20, t: 20, b: 100 },
             xaxis: { showgrid: false },
             yaxis: { title: 'Adoption Rate (%)', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
@@ -322,11 +350,12 @@
             height: 450
         });
         
+        // Monthly All
         var trendDataAll = {"Status changes to something -> Create subitem": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [0.98, 1.04, 1.09, 1.12, 1.16, 1.21, 1.23, 1.25, 1.28, 1.31, 1.36, 1.35]}, "Status changes to something -> Move to board": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [7.54, 7.81, 8.14, 8.36, 8.56, 8.84, 9.0, 9.08, 9.26, 9.42, 9.56, 9.61]}, "Status changes to something -> Move to group": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [30.88, 31.63, 32.61, 33.33, 34.1, 34.95, 35.55, 36.06, 36.63, 37.11, 37.8, 38.08]}, "Status changes to something -> Notify": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [28.21, 29.26, 30.35, 31.2, 31.98, 32.68, 33.08, 33.75, 34.14, 34.36, 34.62, 34.48]}, "Status changes to something -> Set date": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [13.39, 13.41, 13.7, 13.99, 14.29, 14.53, 14.76, 15.0, 15.25, 15.5, 15.76, 15.81]}, "Status changes to something -> Set status": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [6.82, 7.03, 7.24, 7.4, 7.58, 7.78, 7.93, 8.1, 8.24, 8.41, 8.57, 8.6]}, "item created -> Create subitem": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [0.75, 0.78, 0.82, 0.85, 0.87, 0.92, 0.93, 0.95, 0.97, 0.98, 1.01, 1.03]}, "item created -> Notify": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [3.67, 3.82, 4.07, 4.19, 4.36, 4.49, 4.66, 4.77, 4.92, 5.05, 5.21, 5.28]}, "item created -> Set date": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [14.91, 15.42, 15.68, 15.81, 16.15, 16.43, 16.72, 16.94, 17.35, 17.64, 17.95, 18.03]}, "item created -> Set status": {"months": ["2025-03-01", "2025-04-01", "2025-05-01", "2025-06-01", "2025-07-01", "2025-08-01", "2025-09-01", "2025-10-01", "2025-11-01", "2025-12-01", "2026-01-01", "2026-02-01"], "rates": [50.75, 52.25, 53.93, 55.28, 56.44, 57.54, 58.38, 59.38, 59.96, 60.36, 61.03, 61.17]}};
-        var trendTracesAll = [];
+        var trendTracesMonthlyAll = [];
         i = 0;
         for (var autoType in trendDataAll) {
-            trendTracesAll.push({
+            trendTracesMonthlyAll.push({
                 type: 'scatter', mode: 'lines+markers',
                 name: autoType,
                 x: trendDataAll[autoType].months,
@@ -336,9 +365,55 @@
             });
             i++;
         }
-        Plotly.newPlot('chart-trend-all', trendTracesAll, {
+        Plotly.newPlot('chart-trend-monthly-all', trendTracesMonthlyAll, {
             margin: { l: 60, r: 20, t: 20, b: 150 },
             xaxis: { showgrid: false },
+            yaxis: { title: 'Adoption Rate (%)', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
+            legend: { orientation: 'h', y: -0.25, x: 0.5, xanchor: 'center', font: { size: 9 } },
+            height: 550
+        });
+        
+        // Weekly Top 5
+        var trendWeeklyDataTop5 = {"Status changes to something -> Move to group": {"weeks": ["2025-12-01", "2025-12-08", "2025-12-15", "2025-12-22", "2025-12-29", "2026-01-05", "2026-01-12", "2026-01-19", "2026-01-26", "2026-02-02", "2026-02-09", "2026-02-16"], "rates": [36.76, 36.88, 37.02, 37.14, 37.17, 37.38, 37.49, 37.72, 37.81, 37.95, 38.04, 38.08]}, "Status changes to something -> Notify": {"weeks": ["2025-12-01", "2025-12-08", "2025-12-15", "2025-12-22", "2025-12-29", "2026-01-05", "2026-01-12", "2026-01-19", "2026-01-26", "2026-02-02", "2026-02-09", "2026-02-16"], "rates": [34.18, 34.23, 34.3, 34.37, 34.44, 34.51, 34.57, 34.61, 34.6, 34.65, 34.57, 34.48]}, "Status changes to something -> Set date": {"weeks": ["2025-12-01", "2025-12-08", "2025-12-15", "2025-12-22", "2025-12-29", "2026-01-05", "2026-01-12", "2026-01-19", "2026-01-26", "2026-02-02", "2026-02-09", "2026-02-16"], "rates": [15.29, 15.39, 15.49, 15.52, 15.56, 15.66, 15.71, 15.73, 15.76, 15.8, 15.8, 15.81]}, "item created -> Set date": {"weeks": ["2025-12-01", "2025-12-08", "2025-12-15", "2025-12-22", "2025-12-29", "2026-01-05", "2026-01-12", "2026-01-19", "2026-01-26", "2026-02-02", "2026-02-09", "2026-02-16"], "rates": [17.42, 17.51, 17.58, 17.65, 17.69, 17.78, 17.89, 17.9, 17.95, 17.98, 18.02, 18.03]}, "item created -> Set status": {"weeks": ["2025-12-01", "2025-12-08", "2025-12-15", "2025-12-22", "2025-12-29", "2026-01-05", "2026-01-12", "2026-01-19", "2026-01-26", "2026-02-02", "2026-02-09", "2026-02-16"], "rates": [60.06, 60.13, 60.27, 60.37, 60.41, 60.61, 60.77, 60.91, 61.01, 61.11, 61.18, 61.17]}};
+        var trendTracesWeeklyTop5 = [];
+        i = 0;
+        for (var autoType in trendWeeklyDataTop5) {
+            trendTracesWeeklyTop5.push({
+                type: 'scatter', mode: 'lines+markers',
+                name: autoType,
+                x: trendWeeklyDataTop5[autoType].weeks,
+                y: trendWeeklyDataTop5[autoType].rates,
+                line: { color: colors[i % colors.length], width: 2 },
+                marker: { size: 6 }
+            });
+            i++;
+        }
+        Plotly.newPlot('chart-trend-weekly-top5', trendTracesWeeklyTop5, {
+            margin: { l: 60, r: 20, t: 20, b: 100 },
+            xaxis: { showgrid: false, tickangle: -45 },
+            yaxis: { title: 'Adoption Rate (%)', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
+            legend: { orientation: 'h', y: -0.2, x: 0.5, xanchor: 'center', font: { size: 10 } },
+            height: 450
+        });
+        
+        // Weekly All
+        var trendWeeklyDataAll = {"Status changes to something -> Create subitem": {"weeks": ["2025-12-01", "2025-12-08", "2025-12-15", "2025-12-22", "2025-12-29", "2026-01-05", "2026-01-12", "2026-01-19", "2026-01-26", "2026-02-02", "2026-02-09", "2026-02-16"], "rates": [1.28, 1.29, 1.33, 1.32, 1.32, 1.33, 1.34, 1.34, 1.36, 1.35, 1.35, 1.35]}, "Status changes to something -> Move to board": {"weeks": ["2025-12-01", "2025-12-08", "2025-12-15", "2025-12-22", "2025-12-29", "2026-01-05", "2026-01-12", "2026-01-19", "2026-01-26", "2026-02-02", "2026-02-09", "2026-02-16"], "rates": [9.32, 9.36, 9.41, 9.44, 9.44, 9.48, 9.53, 9.55, 9.57, 9.57, 9.58, 9.61]}, "Status changes to something -> Move to group": {"weeks": ["2025-12-01", "2025-12-08", "2025-12-15", "2025-12-22", "2025-12-29", "2026-01-05", "2026-01-12", "2026-01-19", "2026-01-26", "2026-02-02", "2026-02-09", "2026-02-16"], "rates": [36.76, 36.88, 37.02, 37.14, 37.17, 37.38, 37.49, 37.72, 37.81, 37.95, 38.04, 38.08]}, "Status changes to something -> Notify": {"weeks": ["2025-12-01", "2025-12-08", "2025-12-15", "2025-12-22", "2025-12-29", "2026-01-05", "2026-01-12", "2026-01-19", "2026-01-26", "2026-02-02", "2026-02-09", "2026-02-16"], "rates": [34.18, 34.23, 34.3, 34.37, 34.44, 34.51, 34.57, 34.61, 34.6, 34.65, 34.57, 34.48]}, "Status changes to something -> Set date": {"weeks": ["2025-12-01", "2025-12-08", "2025-12-15", "2025-12-22", "2025-12-29", "2026-01-05", "2026-01-12", "2026-01-19", "2026-01-26", "2026-02-02", "2026-02-09", "2026-02-16"], "rates": [15.29, 15.39, 15.49, 15.52, 15.56, 15.66, 15.71, 15.73, 15.76, 15.8, 15.8, 15.81]}, "Status changes to something -> Set status": {"weeks": ["2025-12-01", "2025-12-08", "2025-12-15", "2025-12-22", "2025-12-29", "2026-01-05", "2026-01-12", "2026-01-19", "2026-01-26", "2026-02-02", "2026-02-09", "2026-02-16"], "rates": [8.27, 8.33, 8.37, 8.4, 8.44, 8.47, 8.54, 8.56, 8.57, 8.6, 8.62, 8.6]}, "item created -> Create subitem": {"weeks": ["2025-12-01", "2025-12-08", "2025-12-15", "2025-12-22", "2025-12-29", "2026-01-05", "2026-01-12", "2026-01-19", "2026-01-26", "2026-02-02", "2026-02-09", "2026-02-16"], "rates": [0.98, 0.99, 0.99, 0.99, 0.98, 0.99, 1.0, 1.0, 1.01, 1.02, 1.03, 1.03]}, "item created -> Notify": {"weeks": ["2025-12-01", "2025-12-08", "2025-12-15", "2025-12-22", "2025-12-29", "2026-01-05", "2026-01-12", "2026-01-19", "2026-01-26", "2026-02-02", "2026-02-09", "2026-02-16"], "rates": [4.96, 5.02, 5.04, 5.06, 5.06, 5.09, 5.16, 5.19, 5.22, 5.22, 5.26, 5.28]}, "item created -> Set date": {"weeks": ["2025-12-01", "2025-12-08", "2025-12-15", "2025-12-22", "2025-12-29", "2026-01-05", "2026-01-12", "2026-01-19", "2026-01-26", "2026-02-02", "2026-02-09", "2026-02-16"], "rates": [17.42, 17.51, 17.58, 17.65, 17.69, 17.78, 17.89, 17.9, 17.95, 17.98, 18.02, 18.03]}, "item created -> Set status": {"weeks": ["2025-12-01", "2025-12-08", "2025-12-15", "2025-12-22", "2025-12-29", "2026-01-05", "2026-01-12", "2026-01-19", "2026-01-26", "2026-02-02", "2026-02-09", "2026-02-16"], "rates": [60.06, 60.13, 60.27, 60.37, 60.41, 60.61, 60.77, 60.91, 61.01, 61.11, 61.18, 61.17]}};
+        var trendTracesWeeklyAll = [];
+        i = 0;
+        for (var autoType in trendWeeklyDataAll) {
+            trendTracesWeeklyAll.push({
+                type: 'scatter', mode: 'lines+markers',
+                name: autoType,
+                x: trendWeeklyDataAll[autoType].weeks,
+                y: trendWeeklyDataAll[autoType].rates,
+                line: { color: colors[i % colors.length], width: 2 },
+                marker: { size: 5 }
+            });
+            i++;
+        }
+        Plotly.newPlot('chart-trend-weekly-all', trendTracesWeeklyAll, {
+            margin: { l: 60, r: 20, t: 20, b: 150 },
+            xaxis: { showgrid: false, tickangle: -45 },
             yaxis: { title: 'Adoption Rate (%)', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
             legend: { orientation: 'h', y: -0.25, x: 0.5, xanchor: 'center', font: { size: 9 } },
             height: 550
@@ -351,12 +426,13 @@
             text: [193, 178, 42],
             textposition: 'outside',
             textfont: { size: 10 },
+            cliponaxis: false,
             marker: { color: '#6161FF' }
         }], {
-            margin: { l: 60, r: 30, t: 30, b: 70 },
+            margin: { l: 60, r: 30, t: 40, b: 70 },
             xaxis: { showgrid: false, tickangle: -45 },
-            yaxis: { title: 'Clicks', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
-            height: 320
+            yaxis: { title: 'Clicks', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)', automargin: true },
+            height: 350
         });
         
         Plotly.newPlot('chart-events-accounts-daily', [{
@@ -366,12 +442,13 @@
             text: [146, 147, 41],
             textposition: 'outside',
             textfont: { size: 10 },
+            cliponaxis: false,
             marker: { color: '#181B34' }
         }], {
-            margin: { l: 60, r: 30, t: 30, b: 70 },
+            margin: { l: 60, r: 30, t: 40, b: 70 },
             xaxis: { showgrid: false, tickangle: -45 },
-            yaxis: { title: 'Unique Accounts', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
-            height: 320
+            yaxis: { title: 'Unique Accounts', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)', automargin: true },
+            height: 350
         });
         
         Plotly.newPlot('chart-events-clicks-weekly', [{
@@ -381,12 +458,13 @@
             text: [413],
             textposition: 'outside',
             textfont: { size: 10 },
+            cliponaxis: false,
             marker: { color: '#6161FF' }
         }], {
-            margin: { l: 60, r: 30, t: 30, b: 50 },
+            margin: { l: 60, r: 30, t: 40, b: 50 },
             xaxis: { showgrid: false },
-            yaxis: { title: 'Clicks', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
-            height: 320
+            yaxis: { title: 'Clicks', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)', automargin: true },
+            height: 350
         });
         
         Plotly.newPlot('chart-events-accounts-weekly', [{
@@ -396,12 +474,13 @@
             text: [326],
             textposition: 'outside',
             textfont: { size: 10 },
+            cliponaxis: false,
             marker: { color: '#181B34' }
         }], {
-            margin: { l: 60, r: 30, t: 30, b: 50 },
+            margin: { l: 60, r: 30, t: 40, b: 50 },
             xaxis: { showgrid: false },
-            yaxis: { title: 'Unique Accounts', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
-            height: 320
+            yaxis: { title: 'Unique Accounts', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)', automargin: true },
+            height: 350
         });
     </script>
 </body>
