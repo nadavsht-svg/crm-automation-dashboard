@@ -36,7 +36,7 @@
     <div class="header">
         <h1>CRM Automation Adoption</h1>
     </div>
-    <div class="freshness">Generated: 2026-02-21 19:27</div>
+    <div class="freshness">Generated: 2026-02-21 19:33</div>
     
     <div class="tabs">
         <div class="tab active" onclick="switchTab('adoption')">Adoption</div>
@@ -134,12 +134,12 @@
         <div class="kpi-row" style="grid-template-columns: repeat(3, 1fr);">
             <div class="kpi-card">
                 <div class="kpi-label">Clicks on "CRM Recommended"</div>
-                <div class="kpi-value">413</div>
+                <div class="kpi-value">416</div>
                 <div class="kpi-sub">since Feb 19</div>
             </div>
             <div class="kpi-card">
                 <div class="kpi-label">Accounts That Clicked</div>
-                <div class="kpi-value">326</div>
+                <div class="kpi-value">327</div>
                 <div class="kpi-sub">unique accounts</div>
             </div>
             <div class="kpi-card">
@@ -254,7 +254,7 @@
         }], {
             margin: { l: 60, r: 30, t: 20, b: 50 },
             xaxis: { showgrid: false },
-            yaxis: { title: 'Adoption Rate (%)', ticksuffix: '%', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
+            yaxis: { title: 'Adoption Rate (%)', ticksuffix: '%', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)', rangemode: 'tozero' },
             height: 300
         });
         
@@ -345,7 +345,7 @@
         Plotly.newPlot('chart-trend-monthly-top5', trendTracesMonthlyTop5, {
             margin: { l: 60, r: 20, t: 20, b: 100 },
             xaxis: { showgrid: false },
-            yaxis: { title: 'Adoption Rate (%)', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
+            yaxis: { title: 'Adoption Rate (%)', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)', rangemode: 'tozero' },
             legend: { orientation: 'h', y: -0.2, x: 0.5, xanchor: 'center', font: { size: 10 } },
             height: 450
         });
@@ -368,7 +368,7 @@
         Plotly.newPlot('chart-trend-monthly-all', trendTracesMonthlyAll, {
             margin: { l: 60, r: 20, t: 20, b: 150 },
             xaxis: { showgrid: false },
-            yaxis: { title: 'Adoption Rate (%)', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
+            yaxis: { title: 'Adoption Rate (%)', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)', rangemode: 'tozero' },
             legend: { orientation: 'h', y: -0.25, x: 0.5, xanchor: 'center', font: { size: 9 } },
             height: 550
         });
@@ -391,7 +391,7 @@
         Plotly.newPlot('chart-trend-weekly-top5', trendTracesWeeklyTop5, {
             margin: { l: 60, r: 20, t: 20, b: 100 },
             xaxis: { showgrid: false, tickangle: -45 },
-            yaxis: { title: 'Adoption Rate (%)', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
+            yaxis: { title: 'Adoption Rate (%)', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)', rangemode: 'tozero' },
             legend: { orientation: 'h', y: -0.2, x: 0.5, xanchor: 'center', font: { size: 10 } },
             height: 450
         });
@@ -414,7 +414,7 @@
         Plotly.newPlot('chart-trend-weekly-all', trendTracesWeeklyAll, {
             margin: { l: 60, r: 20, t: 20, b: 150 },
             xaxis: { showgrid: false, tickangle: -45 },
-            yaxis: { title: 'Adoption Rate (%)', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)' },
+            yaxis: { title: 'Adoption Rate (%)', showgrid: true, gridcolor: 'rgba(0,0,0,0.05)', rangemode: 'tozero' },
             legend: { orientation: 'h', y: -0.25, x: 0.5, xanchor: 'center', font: { size: 9 } },
             height: 550
         });
@@ -422,8 +422,8 @@
         Plotly.newPlot('chart-events-clicks-daily', [{
             type: 'bar',
             x: ["2026-02-19", "2026-02-20", "2026-02-21"],
-            y: [193, 178, 42],
-            text: [193, 178, 42],
+            y: [193, 178, 45],
+            text: [193, 178, 45],
             textposition: 'outside',
             textfont: { size: 10 },
             cliponaxis: false,
@@ -438,8 +438,8 @@
         Plotly.newPlot('chart-events-accounts-daily', [{
             type: 'bar',
             x: ["2026-02-19", "2026-02-20", "2026-02-21"],
-            y: [146, 147, 41],
-            text: [146, 147, 41],
+            y: [146, 147, 42],
+            text: [146, 147, 42],
             textposition: 'outside',
             textfont: { size: 10 },
             cliponaxis: false,
@@ -454,8 +454,8 @@
         Plotly.newPlot('chart-events-clicks-weekly', [{
             type: 'bar',
             x: ["2026-02-16"],
-            y: [413],
-            text: [413],
+            y: [416],
+            text: [416],
             textposition: 'outside',
             textfont: { size: 10 },
             cliponaxis: false,
@@ -470,8 +470,8 @@
         Plotly.newPlot('chart-events-accounts-weekly', [{
             type: 'bar',
             x: ["2026-02-16"],
-            y: [326],
-            text: [326],
+            y: [327],
+            text: [327],
             textposition: 'outside',
             textfont: { size: 10 },
             cliponaxis: false,
